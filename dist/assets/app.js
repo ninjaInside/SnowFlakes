@@ -100,17 +100,18 @@ __webpack_require__.r(__webpack_exports__);
 
 class SnowFlakesApp {
   constructor() {
-    this.generatorParticle = new _modules_GeneratorParticle__WEBPACK_IMPORTED_MODULE_0__["default"]();
     this.renderCycle = null;
-    this.renderFramerate = 120;
+    this.renderFramerate = 60;
     this.canvas = document.querySelector('.canvas');
     this.ctx = this.canvas.getContext('2d');
+    this.generatorParticle = new _modules_GeneratorParticle__WEBPACK_IMPORTED_MODULE_0__["default"](this.ctx);
   }
 
   render() {
     this.renderCycle = setInterval(() => {
       this.ctx.fillStyle = '#eee';
       this.ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+      this.generatorParticle.generation();
     }, this.renderFramerate);
   }
 
@@ -126,7 +127,7 @@ class SnowFlakesApp {
 
 }
 
-snowFlakes = new SnowFlakesApp();
+let snowFlakes = new SnowFlakesApp();
 snowFlakes.init();
 
 /***/ }),
@@ -147,9 +148,34 @@ class GeneratorParticle {
   constructor(ctx) {
     this.particleList = [];
     this.ctx = ctx;
+    this.s = 10;
+    this.toggleRock = false;
   }
 
-  generation() {}
+  generation() {
+    if (this.particleList.length < 100) {
+      this.particleList.push(new _Particle__WEBPACK_IMPORTED_MODULE_0__["default"](this.randomNumber(0, document.documentElement.clientWidth), this.randomNumber(0, window.innerHeight / 3), 'black'));
+    }
+
+    this.particleList.map(item => {
+      this.ctx.fillStyle = item.color;
+      this.ctx.fillRect(item.x, item.y, item.width, item.height);
+      item.y += this.randomNumber(5, 10);
+      if (item.y >= window.innerHeight) item.y = 0;
+
+      if (item.x < item.maxXpos && !this.toggleRock) {
+        item.x += 3;
+        if (item.x + 3 === item.maxXpos) this.toggleRock = !this.toggleRock;
+      } else if (item.x > item.maxXpos && this.toggleRock) {
+        item.x -= 3;
+        if (item.x === item.minXpos) this.toggleRock = !this.toggleRock;
+      }
+    });
+  }
+
+  randomNumber(min, max) {
+    return Math.floor(Math.random() * max) + min;
+  }
 
 }
 
@@ -170,6 +196,10 @@ class Particle {
   constructor(x, y, color) {
     this.x = x;
     this.y = y;
+    this.width = 15;
+    this.height = 15;
+    this.maxXpos = this.x + 10;
+    this.minXpos = this.x;
     this.color = color;
   }
 
