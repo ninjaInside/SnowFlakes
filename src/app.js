@@ -3,7 +3,7 @@ import GeneratorParticle from './modules/GeneratorParticle'
 class SnowFlakesApp {
 	constructor() {
 		this.renderCycle = null
-		this.renderFramerate = 60
+		this.renderFramerate = 75
 
 		this.canvas = document.querySelector('.canvas')
 		this.ctx = this.canvas.getContext('2d')
@@ -13,7 +13,7 @@ class SnowFlakesApp {
 
 	render() {
 		this.renderCycle = setInterval(() => {
-			this.ctx.fillStyle = '#eee'
+			this.ctx.fillStyle = 'black'
 			this.ctx.fillRect(0, 0, window.innerWidth, window.innerHeight)
 
 			this.generatorParticle.generation()

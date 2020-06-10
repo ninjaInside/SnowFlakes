@@ -3,10 +3,10 @@ class Particle {
 		this.x = x
 		this.y = y
 
-		this.width = 15
-		this.height = 15
+		this.width = 3
+		this.height = 3
 
-		this.maxXpos = this.x + 10
+		this.maxXpos = this.x + 12
 		this.minXpos = this.x
 
 		this.color = color

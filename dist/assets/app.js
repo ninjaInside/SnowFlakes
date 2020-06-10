@@ -101,7 +101,7 @@ __webpack_require__.r(__webpack_exports__);
 class SnowFlakesApp {
   constructor() {
     this.renderCycle = null;
-    this.renderFramerate = 60;
+    this.renderFramerate = 75;
     this.canvas = document.querySelector('.canvas');
     this.ctx = this.canvas.getContext('2d');
     this.generatorParticle = new _modules_GeneratorParticle__WEBPACK_IMPORTED_MODULE_0__["default"](this.ctx);
@@ -109,7 +109,7 @@ class SnowFlakesApp {
 
   render() {
     this.renderCycle = setInterval(() => {
-      this.ctx.fillStyle = '#eee';
+      this.ctx.fillStyle = 'black';
       this.ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
       this.generatorParticle.generation();
     }, this.renderFramerate);
@@ -154,7 +154,7 @@ class GeneratorParticle {
 
   generation() {
     if (this.particleList.length < 100) {
-      this.particleList.push(new _Particle__WEBPACK_IMPORTED_MODULE_0__["default"](this.randomNumber(0, document.documentElement.clientWidth), this.randomNumber(0, window.innerHeight / 3), 'black'));
+      this.particleList.push(new _Particle__WEBPACK_IMPORTED_MODULE_0__["default"](this.randomNumber(0, document.documentElement.clientWidth), this.randomNumber(0, window.innerHeight / 3), 'white'));
     }
 
     this.particleList.map(item => {
@@ -163,12 +163,17 @@ class GeneratorParticle {
       item.y += this.randomNumber(5, 10);
       if (item.y >= window.innerHeight) item.y = 0;
 
-      if (item.x < item.maxXpos && !this.toggleRock) {
-        item.x += 3;
-        if (item.x + 3 === item.maxXpos) this.toggleRock = !this.toggleRock;
-      } else if (item.x > item.maxXpos && this.toggleRock) {
-        item.x -= 3;
-        if (item.x === item.minXpos) this.toggleRock = !this.toggleRock;
+      if (item.x >= window.innerWidth || item.x <= 0) {
+        item.y = 0;
+        item.x = this.randomNumber(0, document.documentElement.clientWidth);
+      }
+
+      if (!this.toggleRock) {
+        item.x += 1;
+        if (item.x >= item.maxXpos) this.toggleRock = true;
+      } else if (this.toggleRock) {
+        item.x -= 1;
+        if (item.x <= item.minXpos) this.toggleRock = false;
       }
     });
   }
@@ -196,9 +201,9 @@ class Particle {
   constructor(x, y, color) {
     this.x = x;
     this.y = y;
-    this.width = 15;
-    this.height = 15;
-    this.maxXpos = this.x + 10;
+    this.width = 3;
+    this.height = 3;
+    this.maxXpos = this.x + 12;
     this.minXpos = this.x;
     this.color = color;
   }

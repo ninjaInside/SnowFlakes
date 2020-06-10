@@ -16,7 +16,7 @@ class GeneratorParticle {
 			this.particleList.push(new Particle(
 				this.randomNumber(0, document.documentElement.clientWidth), 
 				this.randomNumber(0, window.innerHeight / 3), 
-				'black')
+				'white')
 			)	
 		} 
 
@@ -28,17 +28,22 @@ class GeneratorParticle {
 
 			if (item.y >= window.innerHeight) item.y = 0
 
-			if (item.x < item.maxXpos && !this.toggleRock) {
+			if (item.x >= window.innerWidth || item.x <= 0) {
+				item.y = 0
+				item.x = this.randomNumber(0, document.documentElement.clientWidth)
+			}
+
+			if (!this.toggleRock) {
 			
-				item.x += 3
+				item.x += 1
 
-				if (item.x + 3 === item.maxXpos) this.toggleRock = !this.toggleRock
+				if (item.x >= item.maxXpos) this.toggleRock = true
 			
-			} else if (item.x > item.maxXpos && this.toggleRock) {
+			} else if (this.toggleRock) {
 
-				item.x -= 3
+				item.x -= 1
 
-				if (item.x === item.minXpos) this.toggleRock = !this.toggleRock
+				if (item.x <= item.minXpos) this.toggleRock = false
 			}
 		})
 	}
